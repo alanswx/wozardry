@@ -835,9 +835,14 @@ class _CommandDump(_BaseCommand):
     def print_tmap_35(self):
         track_num = 0
         side_num = 0
-        for trk in self.disk_image.tmap:
+        the_flux = self.disk_image.flux
+        if not the_flux:
+            the_flux = [0xFF] * len(self.disk_image.tmap)
+        for trk, flux_trk in zip(self.disk_image.tmap, the_flux):
             if trk != 0xFF:
                 print(("TMAP:  Track %d, Side %d" % (track_num, side_num)).ljust(self.kWidth), "TRKS %d" % (trk))
+            elif flux_trk != 0xFF:
+                print(("FLUX:  Track %d, Side %d" % (track_num, side_num)).ljust(self.kWidth), "TRKS %d" % (flux_trk))
             side_num = 1 - side_num
             if not side_num:
                 track_num += 1
